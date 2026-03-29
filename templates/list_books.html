@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1 class="text-center uppercase text-3xl pb-8">Books list</h1>
+    <form method="GET" class="flex justify-center gap-4 pb-10">
+        {{ form.hidden_tag() }}
+        {{ form.q() }}
+        <p>
+            {{ form.genre.label }}
+            {{ form.genre() }}
+        </p>
+        <a class="cursor-pointer p-4 border border-indigo-500 rounded-md hover:shadow-lg
+        hover:shadow-indigo-500/20"
+           href="{{ url_for('add_book') }}">Add a new book</a>
+    </form>
+    <ul class="flex flex-wrap gap-8 justify-center">
+        {% for book in books %}
+            <li class="basis-[18.75rem] flex flex-col p-6 gap-4 border border-zinc-800 rounded-md
+            shadow-[0_35px_35px_rgba(0,0,0,0.25)]">
+                <p class="flex-grow text-xl basis-[3.5rem] line-clamp-2">{{ book.title }}</p>
+                <div class="flex-grow">
+                    <p class="py-4">Author: {{ book.author }} </p>
+                    <p class="pb-4">Publication year: {{ book.year or "not specified" }}</p>
+                    <p class="pb-6">Genre: {{ book.genre }}</p>
+                </div>
+                <div class="flex justify-between">
+                    <a class=" cursor-pointer px-5 py-3 border border-zinc-700 rounded-md
+                    text-zinc-700 hover:bg-zinc-300 hover:text-zinc-900"
+                       href="{{ url_for('edit_book', book_id=book.id) }}">
+                        Edit
+                    </a>
+                    <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST">
+                        <button type="submit"
+                                class="cursor-pointer p-3 border border-rose-400 rounded-md
+                                hover:bg-rose-400 hover:text-zinc-900 transition-colors w-full">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    {% if not books %}
+        <div class="w-full text-center text-zinc-600 pt-10">No results were found for your query</div>
+    {% endif %}
+{% endblock %}
