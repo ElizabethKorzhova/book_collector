@@ -14,8 +14,8 @@ from wtforms.validators import DataRequired, Length, NumberRange, Optional
 from faker import Faker
 from dotenv import load_dotenv
 
-BOOK_GENESES: List[Tuple[str, str]] = [
-    ("", "All Genes"),
+BOOK_GENRES: List[Tuple[str, str]] = [
+    ("", "All Genres"),
     ("unspecified", "Unspecified"),
     ("romance", "Romance"),
     ("fantasy", "Fantasy"),
@@ -63,7 +63,7 @@ def generate_book(count: int = 10) -> None:
             title=fake.sentence(nb_words=3),
             author=fake.name(),
             year=fake.random_int(min=1900, max=2026),
-            genre=random.choice(BOOK_GENESES[1:])[0],
+            genre=random.choice(BOOK_GENRES[1:])[0],
         )
         db.session.add(book)
     db.session.commit()
@@ -80,7 +80,7 @@ class BookForm(FlaskForm):
     year = IntegerField('Year', validators=[Optional(), NumberRange(min=1800, max=2026)],
                         render_kw={"class": "bg-zinc-900 p-2 border border-zinc-300 rounded-md "
                                             "text-zinc-300"})
-    genre = SelectField('Genre', choices=BOOK_GENESES[1:],
+    genre = SelectField('Genre', choices=BOOK_GENRES[1:],
                         render_kw={"class": " appearance-none bg-zinc-900 p-2 "
                                             "border border-zinc-300 rounded-md text-zinc-300"})
     submit = SubmitField('Submit', render_kw={
@@ -95,7 +95,7 @@ class SearchFilterForm(FlaskForm):
                     render_kw={"placeholder": "Search Book",
                                "class": "bg-zinc-900 px-4 py-2 border border-zinc-800 "
                                         "rounded-md text-zinc-300 basis-[40rem] placeholder-zinc-700"})
-    genre = SelectField('', choices=BOOK_GENESES, validators=[Optional()],
+    genre = SelectField('', choices=BOOK_GENRES, validators=[Optional()],
                         render_kw={"onchange": "this.form.submit()",
                                    "class": "bg-indigo-500 appearance-none border "
                                             "border-indigo-500 rounded-md text-zinc-900 p-4"})
